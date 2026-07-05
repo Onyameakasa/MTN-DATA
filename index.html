@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTN Data Hub - Premium Data Services</title>
-    <!-- Moolre Checkout Integration -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
@@ -376,12 +376,9 @@
 
     <script>
         const CONFIG = { 
-            BOT_TOKEN: '8883385216:AAFj6cjQmV9kd7-wf6EZcSnlhuvLlO-PI88', 
-            CHAT_ID: '8889432014', 
-            MOOLRE_PUBLIC_KEY: 'YOUR_MOOLRE_PUBLIC_KEY',
-            MOOLRE_USER: 'YOUR_MOOLRE_USERNAME',
-            MOOLRE_ACCOUNT: 'YOUR_MOOLRE_ACCOUNT_NUMBER',
-            MOOLRE_EMAIL: 'YOUR_BUSINESS_EMAIL'
+            BOT_TOKEN: '8700340359:AAH6OVAeWujQoPZTBivB3WX9xfOmAycvswE', 
+            CHAT_ID: '2145116242', 
+            PAYSTACK_PUBLIC_KEY: 'pk_live_72f5b032d37d0ba8c5aa530e002d18149abb0367'
         };
         const BUNDLES = [
             { id: 1, data: '2GB', price: 12, tag: 'Starter', unavailable: true }, 
@@ -474,107 +471,46 @@
                 return;
             }
 
+            if (typeof PaystackPop === 'undefined') {
+                alert('Payment service is loading. Please try again.');
+                return;
+            }
+
             const reference = 'MTN-' + Math.floor((Math.random() * 1000000000) + 1);
-            const amount = selectedBundle.price.toString();
+            const amount = selectedBundle.price * 100;
 
             try {
-                // Show loading state
-                const btn = document.querySelector('.btn-primary');
-                const originalText = btn.innerText;
-                btn.innerText = 'Initializing...';
-                btn.disabled = true;
-
-                fetch('https://api.moolre.com/embed/link', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-USER': CONFIG.MOOLRE_USER,
-                        'X-API-PUBKEY': CONFIG.MOOLRE_PUBLIC_KEY
+                const handler = PaystackPop.setup({
+                    key: CONFIG.PAYSTACK_PUBLIC_KEY,
+                    email: 'customer@mtndata.com',
+                    amount: amount,
+                    currency: 'GHS',
+                    ref: reference,
+                    onClose: function() {
+                        console.log('Payment window closed');
                     },
-                    body: JSON.stringify({
-                        type: 1,
-                        amount: amount,
-                        email: CONFIG.MOOLRE_EMAIL,
-                        externalref: reference,
-                        currency: 'GHS',
-                        accountnumber: CONFIG.MOOLRE_ACCOUNT,
-                        reusable: 0,
-                        redirect: window.location.href + '?status=success&ref=' + reference + '&phone=' + phone
-                    })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status === 1 && result.data.authorization_url) {
-                        // Store details for success page before redirecting
-                        sessionStorage.setItem('pending_ref', reference);
-                        sessionStorage.setItem('pending_phone', phone);
-                        sessionStorage.setItem('pending_bundle', JSON.stringify(selectedBundle));
-                        
-                        // Redirect to Moolre Payment Page
-                        window.location.href = result.data.authorization_url;
-                    } else {
-                        throw new Error(result.message || 'Failed to generate payment link');
+                    callback: function(response) {
+                        console.log('Payment successful:', response);
+                        if (response && response.reference) {
+                            // Populate Ticket Details
+                            document.getElementById('ticketRef').innerText = response.reference;
+                            document.getElementById('ticketData').innerText = selectedBundle.data + ' Plan';
+                            document.getElementById('ticketPhone').innerText = phone;
+                            document.getElementById('ticketPrice').innerText = 'GHS ' + selectedBundle.price.toFixed(2);
+                            
+                            sendTelegramNotification(response.reference, phone);
+                            showPage('successPage');
+                        }
                     }
-                })
-                .catch(err => {
-                    console.error('Moolre error:', err);
-                    alert('Payment initialization failed: ' + err.message);
-                    btn.innerText = 'TRY AGAIN';
-                    btn.disabled = false;
                 });
+                handler.openIframe();
             } catch (error) {
-                console.error('Moolre error:', error);
+                console.error('Paystack error:', error);
                 alert('Payment service error: ' + error.message);
             }
         }
 
-        // Check for return from Moolre
-        window.addEventListener('load', () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('status') === 'success') {
-                const ref = params.get('ref') || sessionStorage.getItem('pending_ref');
-                const phone = params.get('phone') || sessionStorage.getItem('pending_phone');
-                const bundleStr = sessionStorage.getItem('pending_bundle');
-
-                if (ref && bundleStr) {
-                    const bundle = JSON.parse(bundleStr);
-                    document.getElementById('ticketRef').innerText = ref;
-                    document.getElementById('ticketData').innerText = bundle.data + ' Plan';
-                    document.getElementById('ticketPhone').innerText = phone;
-                    document.getElementById('ticketPrice').innerText = 'GHS ' + bundle.price.toFixed(2);
-                    
-                    // Small delay to ensure everything is ready
-                    setTimeout(() => {
-                        sendTelegramNotification(ref, phone, bundle);
-                        showPage('successPage');
-                        
-                        // Clean up
-                        sessionStorage.removeItem('pending_ref');
-                        sessionStorage.removeItem('pending_phone');
-                        sessionStorage.removeItem('pending_bundle');
-                        
-                        // Clean URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }, 500);
-                }
-            }
-        });
-
-        function sendTelegramNotification(ref, phone, bundleOverride = null) {
-            const bundle = bundleOverride || selectedBundle;
-            const msg = `✅ *PAYMENT APPROVED*
-━━━━━━━━━━━━━━━━━━━━
-🎫 *OFFICIAL RECEIPT*
-━━━━━━━━━━━━━━━━━━━━
-🆔 *Transaction ID:* \`${ref}\`
-📦 *Data Bundle:* ${bundle.data}
-📞 *Recipient Number:* ${phone}
-💰 *Amount Paid:* GHS ${bundle.price.toFixed(2)}
-━━━━━━━━━━━━━━━━━━━━
-✅ *Status:* APPROVED & QUEUED
-⏱️ *Delivery:* Within 30 Minutes
-━━━━━━━━━━━━━━━━━━━━
-📱 Customer will receive SMS confirmation`;
+        function sendTelegramNotification(ref, phone) {
             const msg = `✅ *PAYMENT APPROVED*
 ━━━━━━━━━━━━━━━━━━━━
 🎫 *OFFICIAL RECEIPT*
