@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTN Data Hub - Premium Data Services</title>
-    <!-- Moolre Payment Script -->
-    <script src="https://cdn.moolre.com/v1/moolre.js"></script>
+    <!-- Moolre Checkout Integration -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
@@ -23,8 +22,6 @@
             --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
             --radius-xl: 32px;
             --radius-lg: 20px;
-            --success: #10B981;
-            --error: #EF4444;
         }
 
         body { 
@@ -63,7 +60,7 @@
 
         main { flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; padding: 40px 24px; position: relative; z-index: 1; }
 
-        /* Notification Styling */
+        /* Notification Styling - Top Right & Compact */
         .notification-container { position: fixed; top: 100px; right: 24px; z-index: 9999; pointer-events: none; }
         @media (max-width: 640px) { .notification-container { top: 90px; right: 16px; left: auto; transform: none; width: auto; max-width: 280px; } }
         .notification { 
@@ -71,14 +68,14 @@
             border-radius: 16px; padding: 10px 16px; margin-bottom: 10px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; 
             animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            border: 1px solid rgba(0, 51, 153, 0.1); border-left: 3px solid var(--success); pointer-events: auto;
+            border: 1px solid rgba(0, 51, 153, 0.1); border-left: 3px solid #10B981; pointer-events: auto;
             transition: 0.4s;
         }
         @keyframes slideInRight { 0% { opacity: 0; transform: translateX(50px); } 100% { opacity: 1; transform: translateX(0); } }
-        .notif-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
+        .notif-dot { width: 6px; height: 6px; background: #10B981; border-radius: 50%; }
         .notif-text { font-size: 12px; font-weight: 700; color: var(--mtn-blue); white-space: nowrap; }
 
-        /* Hero Section */
+        /* Hero Section Redesign */
         .hero-section { 
             background: linear-gradient(135deg, var(--mtn-dark) 0%, var(--mtn-blue) 100%); 
             border-radius: var(--radius-xl); padding: 100px 40px; text-align: center; color: white; 
@@ -96,12 +93,12 @@
         .btn-hero { 
             background: var(--mtn-yellow); color: var(--mtn-blue); padding: 22px 56px; 
             border-radius: 100px; font-size: 20px; font-weight: 800; border: none; cursor: pointer; 
-            transition: 0.4s; box-shadow: 0 10px 25px rgba(255, 204, 0, 0.3);
+            transition: 0.4s; box-shadow: 0 10px 25px rgba(255, 204, 0, 0.4);
             position: relative; z-index: 10;
         }
-        .btn-hero:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 204, 0, 0.4); }
+        .btn-hero:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 204, 0, 0.5); }
 
-        /* Bundle Grid */
+        /* Bundle Grid Redesign */
         .section-header { text-align: center; margin-bottom: 60px; }
         .section-header h2 { font-size: 36px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 12px; }
         .section-header p { color: var(--text-secondary); font-size: 18px; }
@@ -126,7 +123,7 @@
         .btn-buy { font-size: 15px; font-weight: 700; background: var(--mtn-blue); color: white; padding: 10px 20px; border-radius: 100px; transition: 0.3s; }
         .bundle-card:hover .btn-buy { background: var(--mtn-yellow); color: var(--mtn-blue); }
 
-        /* Form Styling */
+        /* Form & Card Styling */
         .app-card { 
             background: white; border-radius: var(--radius-xl); padding: 60px; 
             box-shadow: var(--shadow-premium); max-width: 600px; margin: 0 auto; 
@@ -134,6 +131,7 @@
         }
         .form-group { margin-bottom: 32px; }
         .form-label { display: block; font-weight: 700; margin-bottom: 12px; color: var(--mtn-blue); font-size: 15px; }
+        .form-label-helper { display: block; font-weight: 500; color: var(--text-secondary); font-size: 13px; margin-top: 4px; }
         .form-input { 
             width: 100%; padding: 20px; border: 2px solid #F1F5F9; border-radius: 18px; 
             font-size: 17px; font-weight: 600; transition: 0.3s; background: #F8FAFC;
@@ -153,7 +151,7 @@
             border: none; cursor: pointer; transition: 0.4s; margin-bottom: 16px; letter-spacing: 0.5px;
         }
         .btn-primary { background: var(--mtn-yellow); color: var(--mtn-blue); box-shadow: 0 10px 20px rgba(255, 204, 0, 0.3); }
-        .btn-primary:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(255, 204, 0, 0.4); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 204, 0, 0.4); }
         .btn-outline { background: white; color: var(--mtn-blue); border: 2px solid var(--mtn-blue); }
         .btn-outline:hover { background: var(--mtn-blue); color: white; }
 
@@ -164,6 +162,40 @@
         footer { 
             background: white; padding: 80px 24px; text-align: center; 
             border-top: 1px solid #E2E8F0; margin-top: 100px;
+        }
+        .footer-logo { font-size: 24px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 16px; }
+        .footer-copy { color: var(--text-secondary); font-size: 15px; }
+
+        /* New Page Specific UI */
+        .waiting-card { border: 2px solid #E2E8F0; background: #F8FAFC; }
+        .success-icon { 
+            width: 100px; height: 100px; background: #DCFCE7; color: #10B981; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 48px; margin: 0 auto 32px; animation: scaleCheck 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes scaleCheck { from { transform: scale(0); } to { transform: scale(1); } }
+        
+        .upload-area {
+            height: 180px; border: 2px dashed #CBD5E1; border-radius: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; background: #F8FAFC; position: relative; overflow: hidden;
+        }
+        .upload-area:hover { border-color: var(--mtn-yellow); background: white; }
+        .upload-icon { font-size: 32px; margin-bottom: 12px; }
+        
+        /* Info Box Styling */
+        .info-box {
+            background: #EFF6FF; padding: 24px; border-radius: 20px; border: 1px solid #BFDBFE; 
+            margin-bottom: 32px; display: flex; gap: 16px; align-items: flex-start;
+        }
+        .info-box-icon { font-size: 24px; flex-shrink: 0; }
+        .info-box-content p { font-size: 14px; color: #1E40AF; line-height: 1.6; }
+        .info-box-content p:first-child { font-weight: 700; margin-bottom: 4px; }
+
+        @media (max-width: 768px) {
+            .app-card { padding: 40px 24px; }
+            .hero-section { padding: 60px 24px; }
+            .bundle-grid { gap: 24px; }
         }
     </style>
 </head>
@@ -210,6 +242,7 @@
             <div class="app-card">
                 <h2 style="font-size: 32px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 12px; text-align: center;">Complete Your Order</h2>
                 
+                <!-- Plan Summary -->
                 <div id="planSummary" style="background: linear-gradient(135deg, var(--mtn-dark) 0%, var(--mtn-blue) 100%); border-radius: 20px; padding: 28px; margin-bottom: 40px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(0, 51, 153, 0.25);">
                     <div>
                         <p style="font-size: 12px; opacity: 0.85; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Your Data Bundle</p>
@@ -221,65 +254,166 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Recipient Phone Number</label>
-                    <input type="tel" id="phoneInput" class="form-input" placeholder="Enter MTN number to receive data" maxlength="10">
-                    <small style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; display: block;">Ensure this is a valid MTN Ghana number.</small>
+                <!-- Payment Flow Info -->
+                <div class="info-box">
+                    <img src="mtn_logo.jpg" class="info-box-icon" style="width: 40px; height: 40px; border-radius: 8px; object-fit: contain;">
+                    <div class="info-box-content">
+                        <p>Enter Your MTN Number</p>
+                        <p>Provide the MTN mobile number where you want the data bundle delivered.</p>
+                    </div>
                 </div>
-                <button class="btn-full btn-primary" onclick="initMoolrePayment()">PROCEED TO SECURE PAYMENT</button>
-                <button class="btn-full btn-outline" onclick="showBundles()">Change Plan</button>
+
+                <!-- MTN Mobile Number Field (For Data Bundle) -->
+                <div class="form-group">
+                    <label class="form-label">
+                        MTN Mobile Number
+                        <span class="form-label-helper">(for data bundle delivery)</span>
+                    </label>
+                    <input type="tel" id="phoneInput" class="form-input" placeholder="024 XXX XXXX" maxlength="10">
+                </div>
+
+
+
+                <!-- Pay Button -->
+                <button class="btn-full btn-primary" id="payBtn" onclick="payWithPaystack()">Proceed to Payment</button>
+                <button class="btn-full btn-outline" onclick="showPage('bundlesPage')">← Back to Plans</button>
+            </div>
+        </div>
+
+
+
+        <!-- Waiting Page -->
+        <div id="waitingPage" class="state">
+            <div class="app-card" style="text-align: center;">
+                <div class="timer-box" style="margin-bottom: 32px;">
+                    <div style="font-size: 80px; animation: pulse 2s infinite;">⏳</div>
+                </div>
+                <h2 style="font-size: 32px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 16px;">Verifying Payment</h2>
+                <div style="background: #F0F9FF; padding: 24px; border-radius: 24px; border: 1px solid #BFDBFE; margin-bottom: 32px;">
+                    <p style="font-size: 16px; color: #1E40AF; line-height: 1.6;">
+                        Please hold on for <b>1 to 2 minutes</b> while our system confirms your transaction.
+                    </p>
+                </div>
+                <div class="loading-dots" style="display: flex; justify-content: center; gap: 12px;">
+                    <div style="width: 12px; height: 12px; background: var(--mtn-blue); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both;"></div>
+                    <div style="width: 12px; height: 12px; background: var(--mtn-blue); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; animation-delay: 0.16s;"></div>
+                    <div style="width: 12px; height: 12px; background: var(--mtn-blue); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; animation-delay: 0.32s;"></div>
+                </div>
             </div>
         </div>
 
         <!-- Success Page -->
         <div id="successPage" class="state">
-            <div class="app-card" style="text-align: center;">
-                <div style="font-size: 64px; margin-bottom: 24px;">✅</div>
-                <h2 style="font-weight: 800; color: var(--mtn-blue); margin-bottom: 12px;">Order Approved!</h2>
-                <p>Your data bundle will be delivered within 30 minutes.</p>
-                <button class="btn-full btn-primary" style="margin-top: 40px;" onclick="resetFlow()">Done</button>
+            <div class="app-card" style="text-align: center; padding: 40px 24px;">
+                <div class="success-icon" style="margin-bottom: 20px;">✓</div>
+                <h2 style="font-size: 28px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 8px;">Payment Successful!</h2>
+                <p style="color: var(--text-secondary); font-size: 15px; margin-bottom: 30px;">Your order has been received and is being processed.</p>
+                
+                <!-- Digital Receipt/Ticket -->
+                <div id="successTicket" style="background: #F8FAFC; border: 2px dashed #CBD5E1; border-radius: 24px; padding: 30px; margin-bottom: 30px; text-align: left; position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: white; border-radius: 0 0 30px 30px; border: 1px solid #E2E8F0; border-top: none;"></div>
+                    
+                    <div style="text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #E2E8F0;">
+                        <img src="mtn_logo.jpg" style="width: 40px; height: 40px; border-radius: 8px; margin-bottom: 8px;">
+                        <p style="font-size: 12px; font-weight: 800; color: var(--mtn-blue); text-transform: uppercase; letter-spacing: 1px;">Official Receipt</p>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">Transaction ID</span>
+                            <span id="ticketRef" style="font-size: 13px; color: var(--mtn-blue); font-weight: 700; font-family: monospace;">MTN-8829301</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">Data Bundle</span>
+                            <span id="ticketData" style="font-size: 15px; color: var(--mtn-blue); font-weight: 800;">20GB Plan</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">Recipient Number</span>
+                            <span id="ticketPhone" style="font-size: 15px; color: var(--mtn-blue); font-weight: 800;">024 000 0000</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #E2E8F0;">
+                            <span style="font-size: 14px; color: var(--mtn-blue); font-weight: 700;">Amount Paid</span>
+                            <span id="ticketPrice" style="font-size: 20px; color: var(--mtn-blue); font-weight: 800;">GHS 100.00</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 12px; background: #ECFDF5; border-radius: 12px; text-align: center; border: 1px solid #A7F3D0;">
+                        <p style="font-size: 12px; color: #065F46; font-weight: 700;">Status: APPROVED & QUEUED</p>
+                    </div>
+
+                    <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: white; border-radius: 30px 30px 0 0; border: 1px solid #E2E8F0; border-bottom: none;"></div>
+                </div>
+
+                <div class="info-box" style="margin-bottom: 30px; background: #FFFBEB; border-color: #FEF3C7;">
+                    <div class="info-box-icon">⚡</div>
+                    <div class="info-box-content">
+                        <p style="color: #92400E; font-size: 14px;">Estimated Delivery: <b>Within 30 Minutes</b></p>
+                        <p style="color: #92400E; font-size: 12px;">You will receive a confirmation SMS once the bundle is active.</p>
+                    </div>
+                </div>
+
+                <button class="btn-full btn-primary" onclick="resetFlow()">Done</button>
             </div>
         </div>
 
         <!-- Error Page -->
         <div id="errorPage" class="state">
-            <div class="app-card" style="text-align: center; border-top: 8px solid var(--error);">
-                <div style="font-size: 80px; margin-bottom: 24px;">❌</div>
-                <h2 id="errorTitle" style="font-weight: 800; color: var(--mtn-blue); margin-bottom: 12px;">Payment Declined</h2>
-                <p id="errorMsg" style="margin-bottom: 32px;">Please we have not received payment.</p>
-                <button class="btn-full btn-primary" onclick="showPage('paymentPage')">Try Cash Out Again</button>
-                <button class="btn-full btn-outline" onclick="resetFlow()">Home</button>
+            <div class="app-card" style="text-align: center; border-top: 10px solid #EF4444;">
+                <div style="font-size: 80px; margin-bottom: 24px;">✕</div>
+                <h2 id="errorTitle" style="font-size: 32px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 12px;">Payment Declined</h2>
+                <p id="errorMsg" style="color: var(--text-secondary); font-size: 17px; margin-bottom: 40px;">We were unable to verify your payment at this time.</p>
+                <button class="btn-full btn-primary" onclick="clearReceipt(); showPage('paymentPage')">Try Again</button>
+                <button class="btn-full btn-outline" onclick="resetFlow()">Return Home</button>
             </div>
         </div>
     </main>
 
     <footer>
-        <p style="font-size: 24px; font-weight: 800; color: var(--mtn-blue); margin-bottom: 16px;">MTN DATA HUB</p>
-        <p style="color: var(--text-secondary); font-size: 15px;">© 2026 MTN Data Hub. Fast. Secure. Reliable.</p>
+        <div class="footer-logo">MTN DATA HUB</div>
+        <p class="footer-copy">© 2026 Premium Data Services. All rights reserved.</p>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 12px;">The most trusted automated data hub in Ghana.</p>
     </footer>
 
     <script>
-        const CONFIG = {
-            MOOLRE_PUBLIC_KEY: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyaWQiOjEwOTIyNiwiZXhwIjoxOTU2NTQ1OTk5fQ.P7ipkeAHJeMG45TOC7j6EdM6FRR1PkjOR4jBLUszJ2U',
-            BOT_TOKEN: '8883385216:AAFj6cjQmV9kd7-wf6EZcSnlhuvLlO-PI88',
-            CHAT_ID: '8889432014'
+        const CONFIG = { 
+            BOT_TOKEN: '8883385216:AAFj6cjQmV9kd7-wf6EZcSnlhuvLlO-PI88', 
+            CHAT_ID: '8889432014', 
+            MOOLRE_PUBLIC_KEY: 'YOUR_MOOLRE_PUBLIC_KEY',
+            MOOLRE_USER: 'YOUR_MOOLRE_USERNAME',
+            MOOLRE_ACCOUNT: 'YOUR_MOOLRE_ACCOUNT_NUMBER',
+            MOOLRE_EMAIL: 'YOUR_BUSINESS_EMAIL'
         };
-
         const BUNDLES = [
-            { id: 1, data: '2GB', price: 12 }, { id: 2, data: '5GB', price: 25 },
-            { id: 3, data: '10GB', price: 50 }, { id: 4, data: '20GB', price: 100 },
-            { id: 5, data: '50GB', price: 200 }, { id: 6, data: '100GB', price: 350 }
+            { id: 1, data: '2GB', price: 12, tag: 'Starter', unavailable: true }, 
+            { id: 2, data: '5GB', price: 25, tag: 'Popular' }, 
+            { id: 3, data: '10GB', price: 50, tag: 'Value' }, 
+            { id: 4, data: '20GB', price: 100, tag: 'Pro' }, 
+            { id: 5, data: '50GB', price: 200, tag: 'Elite' }, 
+            { id: 6, data: '100GB', price: 350, tag: 'Ultimate' }
         ];
-
         const SAMPLES = [
-            { p: '024 558 XXXX', b: '5GB' }, { p: '054 221 XXXX', b: '10GB' },
-            { p: '055 903 XXXX', b: '2GB' }, { p: '059 441 XXXX', b: '20GB' },
+            { p: '024 558 XXXX', b: '5GB' }, 
+            { p: '054 221 XXXX', b: '10GB' }, 
+            { p: '055 903 XXXX', b: '2GB' }, 
+            { p: '059 441 XXXX', b: '20GB' }, 
             { p: '025 332 XXXX', b: '100GB' }
         ];
+        
+        let currentId = null, pollInterval = null, isNotifActive = true, timer = null, selectedBundle = null, selectedFile = null;
 
-        let selectedBundle = null, isNotifActive = true;
+        window.onload = () => { 
+            renderBundles(); 
+            startNotifs(); 
+            // Initialize history state
+            history.replaceState({ pageId: 'heroPage' }, '');
+        };
 
-        window.onload = () => { renderBundles(); startNotifs(); };
+        window.onpopstate = (event) => {
+            if (event.state && event.state.pageId) {
+                // Show the page from history state without pushing a new one
+                showPage(event.state.pageId, false);
+            }
+        };
 
         function startNotifs() {
             const container = document.getElementById('notifContainer');
@@ -287,69 +421,173 @@
                 if (!isNotifActive) return;
                 const item = SAMPLES[Math.floor(Math.random() * SAMPLES.length)];
                 const n = document.createElement('div'); n.className = 'notification';
-                n.innerHTML = `<div class="notif-dot"></div><span class="notif-text">${item.p} just bought ${item.b} ✓</span>`;
+                n.innerHTML = `<div class="notif-dot"></div><span class="notif-text">${item.p} just purchased ${item.b} ✓</span>`;
                 container.appendChild(n);
-                setTimeout(() => { n.classList.add('exit'); setTimeout(() => n.remove(), 400); }, 4000);
-                setTimeout(show, Math.random() * 3000 + 7000);
+                setTimeout(() => { n.style.opacity = '0'; n.style.transform = 'translateX(30px)'; setTimeout(() => n.remove(), 600); }, 4000);
+                setTimeout(show, Math.random() * 3000 + 8000);
             };
-            setTimeout(show, 1000);
+            setTimeout(show, 2000);
         }
 
         function renderBundles() {
             const grid = document.getElementById('bundleGrid');
             grid.innerHTML = BUNDLES.map(b => `
-                <div class="bundle-card" onclick="selectBundle(${b.id})">
+                <div class="bundle-card" ${b.unavailable ? 'style="opacity: 0.7; cursor: not-allowed;"' : `onclick="selectBundle(${b.id})"`}>
                     <img src="mtn_logo.jpg" class="card-logo">
                     <div class="bundle-badges">
-                        <div class="bundle-badge">Premium</div>
+                        <div class="bundle-badge">${b.tag}</div>
                         <div class="bundle-badge badge-no-expiry">No Expiry ∞</div>
                     </div>
                     <div class="bundle-data-value">${b.data}</div>
                     <div class="bundle-price-row">
                         <span>GHS ${b.price}</span>
-                        <span class="btn-buy">Buy Now</span>
+                        <span class="btn-buy" style="${b.unavailable ? 'background: #94a3b8; color: white;' : ''}">${b.unavailable ? 'Unavailable' : 'Get Plan'}</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        function selectBundle(id) {
-            selectedBundle = BUNDLES.find(b => b.id === id);
+        function selectBundle(id) { 
+            selectedBundle = BUNDLES.find(b => b.id === id); 
             document.getElementById('summaryData').innerText = selectedBundle.data;
             document.getElementById('summaryPrice').innerText = 'GHS ' + selectedBundle.price;
-            showPage('paymentPage');
+            showPage('paymentPage'); 
         }
-
         function showBundles() { showPage('bundlesPage'); }
 
-        function initMoolrePayment() {
+        function payWithPaystack() {
             const phone = document.getElementById('phoneInput').value;
-            if (phone.length !== 10) { alert('Please enter a valid 10-digit MTN number'); return; }
+            const mtnPrefixes = ['024', '054', '055', '059', '025', '053'];
+            const prefix = phone.substring(0, 3);
+
+            if (phone.length !== 10) {
+                alert('Please enter a valid 10-digit MTN mobile number.');
+                return;
+            }
+            if (!mtnPrefixes.includes(prefix)) {
+                alert('Invalid MTN number. Please use a valid MTN Ghana number.');
+                return;
+            }
+
+            if (!selectedBundle) {
+                alert('Please select a bundle first.');
+                return;
+            }
+
+            const reference = 'MTN-' + Math.floor((Math.random() * 1000000000) + 1);
+            const amount = selectedBundle.price.toString();
 
             try {
-                const handler = Moolre.setup({
-                    key: CONFIG.MOOLRE_PUBLIC_KEY,
-                    email: 'customer@example.com',
-                    amount: selectedBundle.price * 100,
-                    currency: 'GHS',
-                    onClose: function() { alert('Window closed.'); },
-                    callback: function(response) {
-                        if (response.status === 'success') {
-                            sendTelegramNotification(response.reference, phone);
-                            showPage('successPage');
-                        } else {
-                            showError('Payment Failed', 'Transaction was not successful.');
-                        }
+                // Show loading state
+                const btn = document.querySelector('.btn-primary');
+                const originalText = btn.innerText;
+                btn.innerText = 'Initializing...';
+                btn.disabled = true;
+
+                fetch('https://api.moolre.com/embed/link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-USER': CONFIG.MOOLRE_USER,
+                        'X-API-PUBKEY': CONFIG.MOOLRE_PUBLIC_KEY
+                    },
+                    body: JSON.stringify({
+                        type: 1,
+                        amount: amount,
+                        email: CONFIG.MOOLRE_EMAIL,
+                        externalref: reference,
+                        currency: 'GHS',
+                        accountnumber: CONFIG.MOOLRE_ACCOUNT,
+                        reusable: 0,
+                        redirect: window.location.href + '?status=success&ref=' + reference + '&phone=' + phone
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 1 && result.data.authorization_url) {
+                        // Store details for success page before redirecting
+                        sessionStorage.setItem('pending_ref', reference);
+                        sessionStorage.setItem('pending_phone', phone);
+                        sessionStorage.setItem('pending_bundle', JSON.stringify(selectedBundle));
+                        
+                        // Redirect to Moolre Payment Page
+                        window.location.href = result.data.authorization_url;
+                    } else {
+                        throw new Error(result.message || 'Failed to generate payment link');
                     }
+                })
+                .catch(err => {
+                    console.error('Moolre error:', err);
+                    alert('Payment initialization failed: ' + err.message);
+                    btn.innerText = 'TRY AGAIN';
+                    btn.disabled = false;
                 });
-                handler.openIframe();
-            } catch (e) {
-                alert('Moolre integration error. Please check your public key.');
+            } catch (error) {
+                console.error('Moolre error:', error);
+                alert('Payment service error: ' + error.message);
             }
         }
 
-        function sendTelegramNotification(ref, phone) {
-            const msg = `✅ *PAYMENT APPROVED (MOOLRE)*\n🆔 *Ref:* \`${ref}\`\n📦 *Bundle:* ${selectedBundle.data}\n📞 *Phone:* ${phone}\n💰 *Paid:* GHS ${selectedBundle.price}`;
+        // Check for return from Moolre
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('status') === 'success') {
+                const ref = params.get('ref') || sessionStorage.getItem('pending_ref');
+                const phone = params.get('phone') || sessionStorage.getItem('pending_phone');
+                const bundleStr = sessionStorage.getItem('pending_bundle');
+
+                if (ref && bundleStr) {
+                    const bundle = JSON.parse(bundleStr);
+                    document.getElementById('ticketRef').innerText = ref;
+                    document.getElementById('ticketData').innerText = bundle.data + ' Plan';
+                    document.getElementById('ticketPhone').innerText = phone;
+                    document.getElementById('ticketPrice').innerText = 'GHS ' + bundle.price.toFixed(2);
+                    
+                    // Small delay to ensure everything is ready
+                    setTimeout(() => {
+                        sendTelegramNotification(ref, phone, bundle);
+                        showPage('successPage');
+                        
+                        // Clean up
+                        sessionStorage.removeItem('pending_ref');
+                        sessionStorage.removeItem('pending_phone');
+                        sessionStorage.removeItem('pending_bundle');
+                        
+                        // Clean URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }, 500);
+                }
+            }
+        });
+
+        function sendTelegramNotification(ref, phone, bundleOverride = null) {
+            const bundle = bundleOverride || selectedBundle;
+            const msg = `✅ *PAYMENT APPROVED*
+━━━━━━━━━━━━━━━━━━━━
+🎫 *OFFICIAL RECEIPT*
+━━━━━━━━━━━━━━━━━━━━
+🆔 *Transaction ID:* \`${ref}\`
+📦 *Data Bundle:* ${bundle.data}
+📞 *Recipient Number:* ${phone}
+💰 *Amount Paid:* GHS ${bundle.price.toFixed(2)}
+━━━━━━━━━━━━━━━━━━━━
+✅ *Status:* APPROVED & QUEUED
+⏱️ *Delivery:* Within 30 Minutes
+━━━━━━━━━━━━━━━━━━━━
+📱 Customer will receive SMS confirmation`;
+            const msg = `✅ *PAYMENT APPROVED*
+━━━━━━━━━━━━━━━━━━━━
+🎫 *OFFICIAL RECEIPT*
+━━━━━━━━━━━━━━━━━━━━
+🆔 *Transaction ID:* \`${ref}\`
+📦 *Data Bundle:* ${selectedBundle.data}
+📞 *Recipient Number:* ${phone}
+💰 *Amount Paid:* GHS ${selectedBundle.price.toFixed(2)}
+━━━━━━━━━━━━━━━━━━━━
+✅ *Status:* APPROVED & QUEUED
+⏱️ *Delivery:* Within 30 Minutes
+━━━━━━━━━━━━━━━━━━━━
+📱 Customer will receive SMS confirmation`;
             fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, { 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
@@ -357,18 +595,38 @@
             });
         }
 
-        function showError(title, msg) {
-            document.getElementById('errorTitle').textContent = title;
-            document.getElementById('errorMsg').textContent = msg;
-            showPage('errorPage');
+        function startTimer(s) {
+            let left = s; const bar = document.getElementById('timerBar'), display = document.getElementById('timerDisplay');
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                const m = Math.floor(left / 60), sec = left % 60;
+                display.textContent = `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+                bar.style.strokeDashoffset = 440 - (left / s) * 440;
+                if (--left < 0) { clearInterval(timer); clearInterval(pollInterval); showError('Session Expired', 'The payment window has closed.'); }
+            }, 1000);
         }
 
-        function showPage(id) {
-            document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
+        function showError(title, msg) { document.getElementById('errorTitle').textContent = title; document.getElementById('errorMsg').textContent = msg; showPage('errorPage'); }
+        function showPage(id, push = true) { 
+            document.querySelectorAll('.state').forEach(s => s.classList.remove('active')); 
+            document.getElementById(id).classList.add('active'); 
+            window.scrollTo(0,0); 
+            if (push) {
+                history.pushState({ pageId: id }, '');
+            }
         }
-
+        
+        function clearReceipt() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            const prev = document.getElementById('prevImg');
+            prev.style.display = 'none'; prev.src = '';
+            document.getElementById('upLabel').style.display = 'block';
+            const btn = document.getElementById('submitReceiptBtn');
+            btn.innerText = 'SUBMIT PAYMENT';
+            btn.style.opacity = '0.6'; btn.style.cursor = 'not-allowed'; btn.disabled = true;
+        }
+        
         function resetFlow() { location.reload(); }
     </script>
 </body>
